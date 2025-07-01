@@ -18,7 +18,14 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 
 # === Google Sheets Auth ===
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
+import json
+import os
+from io import StringIO
+
+creds_json = os.environ["CREDS_JSON"]
+creds_dict = json.load(StringIO(creds_json))
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
 client = gspread.authorize(creds)
 sheet = client.open("TelegramBotData").sheet1
 
